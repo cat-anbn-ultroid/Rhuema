@@ -20,19 +20,19 @@ const Auth = () => {
   const [lastName, setLastName] = useState("");
   const [userType, setUserType] = useState<'patient' | 'clinician'>('patient');
   
-  const { signIn, signUp, user } = useAuth();
+ const { signIn, signUp, user, userRole, loading } = useAuth();
   const navigate = useNavigate();
 
 const { signIn, signUp, user, userRole, loading } = useAuth();
 
 useEffect(() => {
-  if (loading) return;
+  if (loading || !user || !userRole) return;
 
-  if (user && userRole === 'patient') {
+  if (userRole === 'patient') {
     navigate('/patient');
-  } else if (user && userRole === 'clinician') {
+  } else if (userRole === 'clinician') {
     navigate('/clinician');
-  } else if (user && userRole === 'admin') {
+  } else if (userRole === 'admin') {
     navigate('/');
   }
 }, [user, userRole, loading, navigate]);
