@@ -19,8 +19,8 @@ const Auth = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userType, setUserType] = useState<'patient' | 'clinician'>('patient');
-
-const { signIn, signUp, user, userRole, loading } = useAuth();
+  const navigate = useNavigate();
+  const { signIn, signUp, user, userRole, loading } = useAuth();
 
 useEffect(() => {
   if (loading || !user || !userRole) return;
