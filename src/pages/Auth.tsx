@@ -23,11 +23,19 @@ const Auth = () => {
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user) {
-      navigate('/patient');
-    }
-  }, [user, navigate]);
+const { signIn, signUp, user, userRole, loading } = useAuth();
+
+useEffect(() => {
+  if (loading) return;
+
+  if (user && userRole === 'patient') {
+    navigate('/patient');
+  } else if (user && userRole === 'clinician') {
+    navigate('/clinician');
+  } else if (user && userRole === 'admin') {
+    navigate('/');
+  }
+}, [user, userRole, loading, navigate]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
