@@ -1,4 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +23,7 @@ import {
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 const ClinicianDashboard = () => {
+  const [selectedPatient, setSelectedPatient] = useState<any>(null);
   const patients = [
     { 
       id: 1, 
@@ -279,7 +282,7 @@ const ClinicianDashboard = () => {
                           </TableCell>
                           <TableCell className="text-muted-foreground">{patient.last_visit}</TableCell>
                           <TableCell>
-                            <Button size="sm" variant="ghost">
+                            <Button size="sm" variant="ghost" onClick={() => setSelectedPatient(patient)}>
                               View Details
                               <ArrowUpRight className="ml-1 h-3 w-3" />
                             </Button>
@@ -288,8 +291,34 @@ const ClinicianDashboard = () => {
                       ))}
                     </TableBody>
                   </Table>
-                </CardContent>
-              </Card>
+                </Card>
+
+              <Dialog open={!!selectedPatient} onOpenChange={(open) => !open && setSelectedPatient(null)}>
+                <DialogContent className="sm:max-w-lg">
+                  <DialogHeader>
+                    <DialogTitle>Patient Details</DialogTitle>
+                    <DialogDescription>Demo patient information for clinician review. This is not live medical data.</DialogDescription>
+                  </DialogHeader>
+                  {selectedPatient && (
+                    <div className="space-y-4">
+                      <div className="rounded-lg border p-4">
+                        <h3 className="text-lg font-semibold">{selectedPatient.name}</h3>
+                        <p className="text-sm text-muted-foreground">Age {selectedPatient.age} • Last visit {selectedPatient.last_visit}</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="rounded-lg bg-muted p-3"><p className="text-xs text-muted-foreground">Disease Activity</p><p className="font-semibold">{selectedPatient.disease_activity}</p></div>
+                        <div className="rounded-lg bg-muted p-3"><p className="text-xs text-muted-foreground">Demo Flare-Risk Score</p><p className="font-semibold">{selectedPatient.flare_risk}%</p></div>
+                        <div className="rounded-lg bg-muted p-3"><p className="text-xs text-muted-foreground">Medication Response</p><p className="font-semibold">{selectedPatient.drug_response}</p></div>
+                        <div className="rounded-lg bg-muted p-3"><p className="text-xs text-muted-foreground">Monitoring Status</p><p className="font-semibold capitalize">{selectedPatient.status}</p></div>
+                      </div>
+                      <div className="rounded-lg border p-3 text-sm">
+                        <p className="font-medium mb-1">Clinical review reminder</p>
+                        <p className="text-muted-foreground">Sample data and unvalidated demo scores only. Do not use for treatment decisions.</p>
+                      </div>
+                    </div>
+                  )}
+                </DialogContent>
+              </Dialog>
             </TabsContent>
 
             <TabsContent value="analytics" className="space-y-6">
