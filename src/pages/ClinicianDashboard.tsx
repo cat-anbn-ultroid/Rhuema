@@ -24,6 +24,7 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, R
 
 const ClinicianDashboard = () => {
   const [selectedPatient, setSelectedPatient] = useState<any>(null);
+  const [selectedAlert, setSelectedAlert] = useState<any>(null);
   const patients = [
     { 
       id: 1, 
@@ -194,12 +195,38 @@ const ClinicianDashboard = () => {
                       <p className="font-semibold">{alert.patient}</p>
                       <p className="text-sm text-muted-foreground mt-1">{alert.message}</p>
                     </div>
-                    <Button size="sm" variant="outline">Review</Button>
+                    <Button size="sm" variant="outline" onClick={() => setSelectedAlert(alert)}>Review</Button>
                   </div>
                 </div>
               ))}
             </CardContent>
           </Card>
+
+          <Dialog open={!!selectedAlert} onOpenChange={(open) => !open && setSelectedAlert(null)}>
+            <DialogContent className="sm:max-w-lg">
+              <DialogHeader>
+                <DialogTitle>Alert Review</DialogTitle>
+                <DialogDescription>Demo alert details for clinician review. This alert is sample data, not a live clinical notification.</DialogDescription>
+              </DialogHeader>
+              {selectedAlert && (
+                <div className="space-y-4">
+                  <div className="rounded-lg border p-4">
+                    <p className="text-sm text-muted-foreground">Patient</p>
+                    <p className="font-semibold">{selectedAlert.patient}</p>
+                    <p className="text-sm mt-2">{selectedAlert.message}</p>
+                    <Badge className="mt-3" variant="outline">{selectedAlert.severity} priority</Badge>
+                  </div>
+                  {patients.find((p) => p.name === selectedAlert.patient) && (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="rounded-md bg-muted p-3"><p className="text-xs text-muted-foreground">Demo disease activity</p><p className="font-medium">{patients.find((p) => p.name === selectedAlert.patient)?.disease_activity}</p></div>
+                      <div className="rounded-md bg-muted p-3"><p className="text-xs text-muted-foreground">Demo flare risk score</p><p className="font-medium">{patients.find((p) => p.name === selectedAlert.patient)?.flare_risk}%</p></div>
+                    </div>
+                  )}
+                  <div className="rounded-md border p-3 text-sm text-muted-foreground">Review the patient's reported symptoms and relevant clinical information. This prototype alert is sample data and is not a diagnosis or treatment recommendation.</div>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
 
           {/* Main Content */}
           <Tabs defaultValue="patients" className="space-y-6">
