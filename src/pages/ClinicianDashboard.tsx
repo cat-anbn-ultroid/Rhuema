@@ -291,7 +291,8 @@ const ClinicianDashboard = () => {
                       ))}
                     </TableBody>
                   </Table>
-                </Card>
+                </CardContent>
+              </Card>
 
               <Dialog open={!!selectedPatient} onOpenChange={(open) => !open && setSelectedPatient(null)}>
                 <DialogContent className="sm:max-w-lg">
